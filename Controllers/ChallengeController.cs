@@ -32,7 +32,7 @@ namespace Challenge.Controllers
                         new Client {
                         Name = "Client"+c,
                         Balance = c*c,
-                        Password = "joao"
+                        Password = Hasher.Hash("joao")
                         }
                         );
             }
