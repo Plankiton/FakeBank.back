@@ -27,6 +27,17 @@ namespace Challenge.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetChallengeClient()
         {
+            foreach (var c in new List<int> {0, 1, 2, 3}){
+                _context.Clients.Add(
+                        new Client {
+                        Name = "Client"+c,
+                        Balance = c*c,
+                        Password = "joao"
+                        }
+                        );
+            }
+
+            await _context.SaveChangesAsync();
             return await _context.Clients.ToListAsync();
         }
 
