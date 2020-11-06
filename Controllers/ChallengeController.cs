@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,31 @@ namespace Challenge.Controllers
             return await _context.Clients.ToListAsync();
         }
 
+        // GET: api/client/5/history
+        [HttpGet("{pass}/{id}/history")]
+        public async Task<ActionResult<IEnumerable<History>>> GetClientHistory(string pass, long id)
+        {
+            var ChallengeClient = await _context.Clients.FindAsync(id);
+
+            if (ChallengeClient == null)
+            {
+                return NotFound();
+            }
+
+
+            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "GetClientHistory", Date = DateTime.Now });
+
+            var query = _context.Operations.Where(e => e.Client.Id == id);
+            var history = new List<History>(query.Count());
+
+            foreach (History h in query)
+            {
+                history.Add(h);
+            }
+
+            return CreatedAtAction("GetClientHistory", new { id = ChallengeClient.Id }, history);
+        }
+
         // GET: api/client/5
         [HttpGet("{pass}/{id}")]
         public async Task<ActionResult<Client>> GetChallengeClient(string pass, long id)
@@ -40,41 +66,10 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
+            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "GetClient", Date = DateTime.Now });
             if (Hasher.Verify(pass, ChallengeClient.Password))
                 return ChallengeClient;
             return Unauthorized();
-        }
-
-        // PUT: api/Challenge/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutChallengeClient(long id, Client ChallengeClient)
-        {
-            if (id != ChallengeClient.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(ChallengeClient).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChallengeClientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/Challenge
@@ -86,6 +81,7 @@ namespace Challenge.Controllers
 
             ChallengeClient.Password = Hasher.Hash(ChallengeClient.Password);
             _context.Clients.Add(ChallengeClient);
+            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "CreateClient", Date = DateTime.Now });
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetChallengeClient", new { id = ChallengeClient.Id }, ChallengeClient);
@@ -101,6 +97,7 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
+            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "RemoveClient", Date = DateTime.Now });
             if (Hasher.Verify(pass, ChallengeClient.Password)){
                 _context.Clients.Remove(ChallengeClient);
                 await _context.SaveChangesAsync();
