@@ -52,6 +52,8 @@ namespace Challenge.Controllers
                 history.Add(h);
             }
 
+
+            await _context.SaveChangesAsync();
             return CreatedAtAction("GetClientHistory", new { id = ChallengeClient.Id }, history);
         }
 
@@ -67,6 +69,8 @@ namespace Challenge.Controllers
             }
 
             _context.Operations.Add(new History{ Client = ChallengeClient, Type = "GetClient", Date = DateTime.Now });
+            await _context.SaveChangesAsync();
+
             if (Hasher.Verify(pass, ChallengeClient.Password))
                 return ChallengeClient;
             return Unauthorized();
@@ -98,6 +102,8 @@ namespace Challenge.Controllers
             }
 
             _context.Operations.Add(new History{ Client = ChallengeClient, Type = "RemoveClient", Date = DateTime.Now });
+            await _context.SaveChangesAsync();
+
             if (Hasher.Verify(pass, ChallengeClient.Password)){
                 _context.Clients.Remove(ChallengeClient);
                 await _context.SaveChangesAsync();
