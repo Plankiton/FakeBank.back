@@ -30,5 +30,15 @@ namespace Challenge.Controllers
             return await _context.Operations.ToListAsync();
         }
 
+        // GET: api/history
+        [HttpGet("{pass}/{id}")]
+        public async Task<ActionResult<IEnumerable<Operation>>> GetClientOperations(string pass, long id)
+        {
+            var ChallengeClient = await _context.Clients.FindAsync(id);
+            if (Hasher.Verify(pass, ChallengeClient.Password))
+                return await _context.Operations.Where((e) => e.Client == id.ToString()).ToListAsync();
+            return Unauthorized();
+        }
+
     }
 }
