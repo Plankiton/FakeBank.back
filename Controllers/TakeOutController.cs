@@ -36,13 +36,13 @@ namespace Challenge.Controllers
             }
 
             ChallengeClient.Balance -= request.Value;
-            await _context.SaveChangesAsync();
 
             _context.Operations.Add(new History{
-                    Client = ChallengeClient,
+                    Client = ChallengeClient.Id,
                     Type = "TakeOut",
                     Value = request.Value.ToString(),
                     Date = DateTime.Now });
+            await _context.SaveChangesAsync();
 
             if (Hasher.Verify(request.Password, ChallengeClient.Password))
                 return ChallengeClient;

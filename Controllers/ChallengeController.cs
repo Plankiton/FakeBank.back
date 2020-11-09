@@ -27,45 +27,21 @@ namespace Challenge.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetChallengeClient()
         {
-            foreach (var c in new List<int> {0, 1, 2, 3}){
-                _context.Clients.Add(
-                        new Client {
-                        Name = "Client"+c,
-                        Balance = c*c,
-                        Password = Hasher.Hash("joao")
-                        }
-                        );
+
+            if (!_context.Clients.Any()){
+                foreach (var c in new List<double> {10, 29, 1.6, 7, 8.3}){
+                    var client = new Client {
+                            Name = "Client"+c,
+                            Balance = c*c,
+                            Password = Hasher.Hash("joao")
+                            };
+                    _context.Clients.Add(client);
+                    _context.Operations.Add(new History{ Client = client.Id, Type = "GetClient", Date = DateTime.Now });
+                }
             }
 
             await _context.SaveChangesAsync();
             return await _context.Clients.ToListAsync();
-        }
-
-        // GET: api/client/5/history
-        [HttpGet("{pass}/{id}/history")]
-        public async Task<ActionResult<IEnumerable<History>>> GetClientHistory(string pass, long id)
-        {
-            var ChallengeClient = await _context.Clients.FindAsync(id);
-
-            if (ChallengeClient == null)
-            {
-                return NotFound();
-            }
-
-
-            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "GetClientHistory", Date = DateTime.Now });
-
-            var query = _context.Operations.Where(e => e.Client.Id == id);
-            var history = new List<History>(query.Count());
-
-            foreach (History h in query)
-            {
-                history.Add(h);
-            }
-
-
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetClientHistory", new { id = ChallengeClient.Id }, history);
         }
 
         // GET: api/client/5
@@ -79,7 +55,7 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "GetClient", Date = DateTime.Now });
+            _context.Operations.Add(new History{ Client = ChallengeClient.Id, Type = "GetClient", Date = DateTime.Now });
             await _context.SaveChangesAsync();
 
             if (Hasher.Verify(pass, ChallengeClient.Password))
@@ -96,10 +72,16 @@ namespace Challenge.Controllers
 
             ChallengeClient.Password = Hasher.Hash(ChallengeClient.Password);
             _context.Clients.Add(ChallengeClient);
-            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "CreateClient", Date = DateTime.Now });
+
+            _context.Operations.Add(new History{
+                    Client = ChallengeClient.Id,
+                    Type = "CreateClient",
+                    Value = ChallengeClient.Id.ToString(),
+                    Date = DateTime.Now
+                    });
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetChallengeClient", new { id = ChallengeClient.Id }, ChallengeClient);
+            return CreatedAtAction("CreateChallengeClient", new { id = ChallengeClient.Id }, ChallengeClient);
         }
 
         // DELETE: api/Challenge/5
@@ -112,7 +94,7 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new History{ Client = ChallengeClient, Type = "RemoveClient", Date = DateTime.Now });
+            _context.Operations.Add(new History{ Client = ChallengeClient.Id, Type = "RemoveClient", Date = DateTime.Now });
             await _context.SaveChangesAsync();
 
             if (Hasher.Verify(pass, ChallengeClient.Password)){

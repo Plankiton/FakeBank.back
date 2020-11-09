@@ -23,19 +23,11 @@ namespace Challenge.Controllers
             _context = context;
         }
 
-        // GET: api/client/5/history
+        // GET: api/history
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<History>>> GetClientHistory(string pass, long id)
+        public async Task<ActionResult<IEnumerable<History>>> GetHistory()
         {
-            var query = _context.Operations.Where(e => e.Client.Id == id);
-            var history = new List<History>(query.Count());
-
-            foreach (History h in query)
-            {
-                history.Add(h);
-            }
-
-            return CreatedAtAction("GetClientHistory", new { id = 0 }, history);
+            return await _context.Operations.ToListAsync();
         }
 
     }

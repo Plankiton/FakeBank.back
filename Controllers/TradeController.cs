@@ -43,8 +43,8 @@ namespace Challenge.Controllers
             ReceiverClient.Balance += request.Value;
 
             _context.Operations.Add(new History{
-                    Client = ChallengeClient,
-                    Receiver = ReceiverClient,
+                    Client = ChallengeClient.Id,
+                    Receiver = ReceiverClient.Id,
                     Type = "Trade",
                     Value = request.Value.ToString(),
                     Date = DateTime.Now });

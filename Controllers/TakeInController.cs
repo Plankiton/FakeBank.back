@@ -26,7 +26,7 @@ namespace Challenge.Controllers
 
         // POST: api/takein
         [HttpPost]
-        public async Task<ActionResult<Client>> Get(GenericRequest request)
+        public async Task<ActionResult<History>> Get(GenericRequest request)
         {
             var ChallengeClient = await _context.Clients.FindAsync(request.ClientId);
 
@@ -36,16 +36,17 @@ namespace Challenge.Controllers
             }
 
             ChallengeClient.Balance += request.Value;
-            await _context.SaveChangesAsync();
 
-            _context.Operations.Add(new History{
-                    Client = ChallengeClient,
+            var operation = new History{
+                    Client = ChallengeClient.Id,
                     Type = "TakeIn",
                     Value = request.Value.ToString(),
-                    Date = DateTime.Now });
+                    Date = DateTime.Now };
+            _context.Operations.Add(operation);
+            await _context.SaveChangesAsync();
 
             if (Hasher.Verify(request.Password, ChallengeClient.Password))
-                return ChallengeClient;
+                return operation;
             return Unauthorized();
         }
 
