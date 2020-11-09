@@ -46,7 +46,7 @@ namespace Challenge.Controllers
 
         // GET: api/client/pass/5
         [HttpGet("{pass}/{id}")]
-        public async Task<ActionResult<Client>> GetChallengeClient(string pass, long id)
+        public async Task<ActionResult<ClientResponse>> GetChallengeClient(string pass, long id)
         {
             var ChallengeClient = await _context.Clients.FindAsync(id);
 
@@ -55,11 +55,20 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new Operation{ Client = ChallengeClient.Id.ToString(), Type = "GetClient", Date = DateTime.Now });
-            await _context.SaveChangesAsync();
+            _context.Operations.Add(new Operation{
+                    Client = ChallengeClient.Id.ToString(),
+                    Type = "GetClient",
+                    Date = DateTime.Now });
 
-            if (Hasher.Verify(pass, ChallengeClient.Password))
-                return ChallengeClient;
+            if (Hasher.Verify(pass, ChallengeClient.Password)){
+                await _context.SaveChangesAsync();
+                return new ClientResponse {
+                    Id = ChallengeClient.Id,
+                    Name = ChallengeClient.Name,
+                    Balance = ChallengeClient.Balance
+                };
+            }
+
             return Unauthorized();
         }
 
@@ -92,7 +101,7 @@ namespace Challenge.Controllers
 
         // DELETE: api/Challenge/5
         [HttpDelete("{pass}/{id}")]
-        public async Task<ActionResult<Client>> DeleteChallengeClient(string pass, long id)
+        public async Task<ActionResult<Operation>> DeleteChallengeClient(string pass, long id)
         {
             var ChallengeClient = await _context.Clients.FindAsync(id);
             if (ChallengeClient == null)
@@ -100,13 +109,14 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new Operation{ Client = ChallengeClient.Id.ToString(), Type = "RemoveClient", Date = DateTime.Now });
+            var operation = new Operation{ Client = ChallengeClient.Id.ToString(), Type = "RemoveClient", Date = DateTime.Now };
+            _context.Operations.Add(operation);
 
             if (Hasher.Verify(pass, ChallengeClient.Password)){
                 _context.Clients.Remove(ChallengeClient);
                 await _context.SaveChangesAsync();
 
-                return ChallengeClient;
+                return operation;
             }
 
             return Unauthorized();

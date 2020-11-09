@@ -34,7 +34,7 @@ namespace Challenge.Models
 
         public static bool IsHashSupported(string hashString)
         {
-            return hashString.Contains("$MYHASH$V1$");
+            return hashString.Contains("$CHALLENGE$V1$");
         }
 
         public static bool Verify(string password, string hashedPassword)
@@ -44,7 +44,7 @@ namespace Challenge.Models
                 throw new NotSupportedException("The hashtype is not supported");
             }
 
-            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
+            var splittedHashString = hashedPassword.Replace("$CHALLENGE$V1$", "").Split('$');
             var iterations = int.Parse(splittedHashString[0]);
             var base64Hash = splittedHashString[1];
 

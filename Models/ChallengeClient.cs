@@ -8,6 +8,13 @@
         public double Balance { get; set; }
     }
 
+    public class ClientResponse
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public double Balance { get; set; }
+    }
+
     public class GenericRequest
     {
         public long ClientId { get; set; }
