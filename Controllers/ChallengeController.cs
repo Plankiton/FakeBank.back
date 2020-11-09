@@ -45,6 +45,34 @@ namespace Challenge.Controllers
         }
 
         // GET: api/client/pass/5
+        [HttpGet("byname/{pass}/{name}")]
+        public async Task<ActionResult<ClientResponse>> GetChallengeClientByName(string pass, string name)
+        {
+            var ChallengeClient = _context.Clients.First((c) => c.Name == name);
+
+            if (ChallengeClient == null)
+            {
+                return NotFound();
+            }
+
+            _context.Operations.Add(new Operation{
+                    Client = ChallengeClient.Id.ToString(),
+                    Type = "GetClient",
+                    Date = DateTime.Now });
+
+            if (Hasher.Verify(pass, ChallengeClient.Password)){
+                await _context.SaveChangesAsync();
+                return new ClientResponse {
+                    Id = ChallengeClient.Id,
+                    Name = ChallengeClient.Name,
+                    Balance = ChallengeClient.Balance
+                };
+            }
+
+            return Unauthorized();
+        }
+
+        // GET: api/client/pass/5
         [HttpGet("{pass}/{id}")]
         public async Task<ActionResult<ClientResponse>> GetChallengeClient(string pass, long id)
         {
