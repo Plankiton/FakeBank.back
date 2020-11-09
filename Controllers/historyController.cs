@@ -14,18 +14,18 @@ namespace Challenge.Controllers
 {
     [Route("api/[controller]")] 
     [ApiController]
-    public class HistoryController : Controller
+    public class OperationController : Controller
     {
         private readonly ChallengeContext _context;
 
-        public HistoryController(ChallengeContext context)
+        public OperationController(ChallengeContext context)
         {
             _context = context;
         }
 
         // GET: api/history
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<History>>> GetHistory()
+        public async Task<ActionResult<IEnumerable<Operation>>> GetOperation()
         {
             return await _context.Operations.ToListAsync();
         }

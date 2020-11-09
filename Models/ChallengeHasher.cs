@@ -24,7 +24,7 @@ namespace Challenge.Models
 
             var base64Hash = Convert.ToBase64String(hashBytes);
 
-            return string.Format("$MYHASH$V1${0}${1}", iterations, base64Hash);
+            return string.Format("$CHALLENGE$V1${0}${1}", iterations, base64Hash);
         }
 
         public static string Hash(string password)

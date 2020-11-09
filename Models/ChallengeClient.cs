@@ -15,6 +15,12 @@
         public string Password { get; set; }
     }
 
+    public class ClientRequest
+    {
+        public string Name { get; set; }
+        public string Password { get; set; }
+    }
+
     public class TradeRequest
     {
         public long SenderId { get; set; }

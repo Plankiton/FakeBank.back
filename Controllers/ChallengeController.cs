@@ -25,7 +25,7 @@ namespace Challenge.Controllers
 
         // GET: api/client
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetChallengeClient()
+        public async Task<ActionResult<IEnumerable<Client>>> GetChallengeClients()
         {
 
             if (!_context.Clients.Any()){
@@ -36,7 +36,7 @@ namespace Challenge.Controllers
                             Password = Hasher.Hash("joao")
                             };
                     _context.Clients.Add(client);
-                    _context.Operations.Add(new History{ Client = client.Id, Type = "GetClient", Date = DateTime.Now });
+                    _context.Operations.Add(new Operation{ Client = client.Id.ToString(), Type = "GetClient", Date = DateTime.Now });
                 }
             }
 
@@ -44,7 +44,7 @@ namespace Challenge.Controllers
             return await _context.Clients.ToListAsync();
         }
 
-        // GET: api/client/5
+        // GET: api/client/pass/5
         [HttpGet("{pass}/{id}")]
         public async Task<ActionResult<Client>> GetChallengeClient(string pass, long id)
         {
@@ -55,7 +55,7 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new History{ Client = ChallengeClient.Id, Type = "GetClient", Date = DateTime.Now });
+            _context.Operations.Add(new Operation{ Client = ChallengeClient.Id.ToString(), Type = "GetClient", Date = DateTime.Now });
             await _context.SaveChangesAsync();
 
             if (Hasher.Verify(pass, ChallengeClient.Password))
@@ -67,21 +67,27 @@ namespace Challenge.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Client>> PostChallengeClient(Client ChallengeClient)
+        public async Task<ActionResult<Operation>> PostChallengeClient(ClientRequest client)
         {
+            var ChallengeClient = new Client {
+                Name = client.Name,
+                Password = client.Password,
+                Balance = 0
+            };
 
             ChallengeClient.Password = Hasher.Hash(ChallengeClient.Password);
             _context.Clients.Add(ChallengeClient);
 
-            _context.Operations.Add(new History{
-                    Client = ChallengeClient.Id,
+            var operation = new Operation{
+                    Client = ChallengeClient.Id.ToString(),
                     Type = "CreateClient",
-                    Value = ChallengeClient.Id.ToString(),
                     Date = DateTime.Now
-                    });
+                    };
+
+            _context.Operations.Add(operation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("CreateChallengeClient", new { id = ChallengeClient.Id }, ChallengeClient);
+            return operation;
         }
 
         // DELETE: api/Challenge/5
@@ -94,8 +100,7 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
-            _context.Operations.Add(new History{ Client = ChallengeClient.Id, Type = "RemoveClient", Date = DateTime.Now });
-            await _context.SaveChangesAsync();
+            _context.Operations.Add(new Operation{ Client = ChallengeClient.Id.ToString(), Type = "RemoveClient", Date = DateTime.Now });
 
             if (Hasher.Verify(pass, ChallengeClient.Password)){
                 _context.Clients.Remove(ChallengeClient);

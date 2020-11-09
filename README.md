@@ -1,25 +1,45 @@
----
-languages:
-- csharp
-- aspx-csharp
-page_type: sample
-description: "This is a sample application that you can use to follow along with the Run a RESTful API with CORS in Azure App Service tutorial."
-products:
-- azure
-- aspnet-core
-- azure-app-service
----
+# CidadeAlta Back-End
 
-# ASP.NET Core API sample for Azure App Service
+Uma API **ASP.NET Core** para se comunicar com o [Front-End]() feito em **React.JS**.
 
-This is a sample application that you can use to follow along with the tutorial at 
-[Run a RESTful API with CORS in Azure App Service](https://docs.microsoft.com/azure/app-service/app-service-web-tutorial-rest-api). 
+Eu não criei suporte a banco de dados para facilitar na execução desse projeto em outras máquinas, logo, todos os dados são gravados em memória.
 
-## License
+> Apesar de ser bem simples de adicionar um banco de dados a esse projeto, basta configurar o `Models/ChallengeContext.cs`.
 
-See [LICENSE](https://github.com/Azure-Samples/dotnet-core-api/blob/master/LICENSE.md).
+## Build - Como compilar
 
-## Contributing
+Para poder compilar o projeto você vai precisar do [sdk  `3.1`](https://dotnet.microsoft.com/download/dotnet-core/3.1) instalado em seu computador, e da ferramenta `dotnet` que já vem junto com o sdk.
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-  
+Feito isso você tem que rodar os seguintes comandos em seu terminal:
+
+```sh
+$ cd /pasta/do/projeto
+$ dotnet build
+```
+
+## Run - Como rodar a API
+
+Para rodar a API, você vai ter que entrar na pasta `bin/Debug/netcoreapp3.1` em seu terminal:
+
+```sh
+$ cd bin/Debug/netcoreapp3.1
+```
+
+E é só rodar o comando correspondente ao seu sistema operacional:
+
+> Linux / Mac / Unix
+
+ ```sh
+$ ./Challenge
+ ```
+
+> Windows
+
+```sh
+$ .\Challenge.exe
+```
+
+## Documentação da API
+
+Você pode consultar uma versão interativa desta parte através da API entrando em `localhost:5000/swagger` :
+

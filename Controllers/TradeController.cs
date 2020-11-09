@@ -26,7 +26,7 @@ namespace Challenge.Controllers
 
         // POST: api/trade
         [HttpPost]
-        public async Task<ActionResult<Client>> Get(TradeRequest request)
+        public async Task<ActionResult<Operation>> Get(TradeRequest request)
         {
             long id = request.ReceiverId;
             var ReceiverClient = await _context.Clients.FindAsync(id);
@@ -42,16 +42,19 @@ namespace Challenge.Controllers
             ChallengeClient.Balance -= request.Value;
             ReceiverClient.Balance += request.Value;
 
-            _context.Operations.Add(new History{
-                    Client = ChallengeClient.Id,
-                    Receiver = ReceiverClient.Id,
+            var operation = new Operation{
+                    Client = ChallengeClient.Id.ToString(),
+                    Receiver = ReceiverClient.Id.ToString(),
                     Type = "Trade",
                     Value = request.Value.ToString(),
-                    Date = DateTime.Now });
-            await _context.SaveChangesAsync();
+                    Date = DateTime.Now };
+            _context.Operations.Add(operation);
 
-            if (Hasher.Verify(request.Password, ChallengeClient.Password))
-                return ChallengeClient;
+            if (Hasher.Verify(request.Password, ChallengeClient.Password)){
+                await _context.SaveChangesAsync();
+                return operation;
+            }
+
             return Unauthorized();
         }
 

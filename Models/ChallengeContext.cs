@@ -9,7 +9,7 @@ namespace Challenge.Models
         {
         }
 
-        public DbSet<History> Operations { get; set; }
+        public DbSet<Operation> Operations { get; set; }
         public DbSet<Client>  Clients { get; set; }
     }
 }
