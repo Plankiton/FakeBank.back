@@ -9,6 +9,7 @@ namespace Challenge.Models
         public DateTime Date { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }
+        public string Sender { get; set; }
         public string Receiver { get; set; }
     }
 }

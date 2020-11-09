@@ -43,7 +43,7 @@ namespace Challenge.Controllers
             ReceiverClient.Balance += request.Value;
 
             var operation = new Operation{
-                    Client = ChallengeClient.Id.ToString(),
+                    Sender = ChallengeClient.Id.ToString(),
                     Receiver = ReceiverClient.Id.ToString(),
                     Type = "Trade",
                     Value = request.Value.ToString(),

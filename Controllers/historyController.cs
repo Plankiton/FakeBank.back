@@ -34,9 +34,12 @@ namespace Challenge.Controllers
         [HttpGet("{pass}/{id}")]
         public async Task<ActionResult<IEnumerable<Operation>>> GetClientOperations(string pass, long id)
         {
+            var strId = id.ToString();
             var ChallengeClient = await _context.Clients.FindAsync(id);
             if (Hasher.Verify(pass, ChallengeClient.Password))
-                return await _context.Operations.Where((e) => e.Client == id.ToString()).ToListAsync();
+                return await _context.Operations.Where((e) =>
+                        e.Client == strId || e.Sender == strId || e.Receiver == strId
+                        ).ToListAsync();
             return Unauthorized();
         }
 
