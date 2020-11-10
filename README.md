@@ -93,12 +93,9 @@ Exemplo de Resposta:
 
 ```json
 {
-  "id": 1,
-  "client": "Id do cliente",
-  "date": "timestamp",
-  "type": "CreateClient",
-  "value": null,
-  "receiver": null
+    "id": 1,
+    "name": "string",
+    "balance": 0
 }
 ```
 

@@ -104,7 +104,7 @@ namespace Challenge.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Operation>> PostChallengeClient(ClientRequest client)
+        public async Task<ActionResult<Client>> PostChallengeClient(ClientRequest client)
         {
             var ChallengeClient = new Client {
                 Name = client.Name,
@@ -124,7 +124,7 @@ namespace Challenge.Controllers
             _context.Operations.Add(operation);
             await _context.SaveChangesAsync();
 
-            return operation;
+            return ChallengeClient;
         }
 
         // DELETE: api/Challenge/5
