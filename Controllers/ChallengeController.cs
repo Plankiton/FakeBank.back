@@ -36,7 +36,8 @@ namespace Challenge.Controllers
                             Password = Hasher.Hash("joao")
                             };
                     _context.Clients.Add(client);
-                    _context.Operations.Add(new Operation{ Client = client.Id.ToString(), Type = "GetClient", Date = DateTime.Now });
+                    var strBalance = client.Balance.ToString();
+                    _context.Operations.Add(new Operation{ Client = client.Id.ToString(), Type = "GetClient", Value = strBalance, Date = DateTime.Now });
                 }
             }
 
@@ -55,9 +56,11 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
+            var strBalance = ChallengeClient.Balance.ToString();
             _context.Operations.Add(new Operation{
                     Client = ChallengeClient.Id.ToString(),
                     Type = "GetClient",
+                    Value = strBalance,
                     Date = DateTime.Now });
 
             if (Hasher.Verify(pass, ChallengeClient.Password)){
@@ -83,9 +86,11 @@ namespace Challenge.Controllers
                 return NotFound();
             }
 
+            var strBalance = ChallengeClient.Balance.ToString();
             _context.Operations.Add(new Operation{
                     Client = ChallengeClient.Id.ToString(),
                     Type = "GetClient",
+                    Value = strBalance,
                     Date = DateTime.Now });
 
             if (Hasher.Verify(pass, ChallengeClient.Password)){
