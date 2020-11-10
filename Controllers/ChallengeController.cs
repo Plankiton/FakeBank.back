@@ -106,6 +106,13 @@ namespace Challenge.Controllers
         [HttpPost]
         public async Task<ActionResult<Client>> PostChallengeClient(ClientRequest client)
         {
+            var ChallengeClient = _context.Clients.First((c) => c.Name == name);
+
+            if (ChallengeClient != null)
+            {
+                return ChallengeClient;
+            }
+
             var ChallengeClient = new Client {
                 Name = client.Name,
                 Password = client.Password,
