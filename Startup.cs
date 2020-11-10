@@ -26,10 +26,18 @@ namespace Challenge
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cidade Alta Challenge", Version = "v1" });
             });
 
             services.AddDbContext<ChallengeContext>(options => options.UseInMemoryDatabase("Challenge"));
+
+            services.AddCors( o => {
+                    o.AddDefaultPolicy(builder => 
+                            builder.SetIsOriginAllowed(_ => true)
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials());
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,9 +49,9 @@ namespace Challenge
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+                    {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cidade Alta Challenge V1");
+                    });
 
             if (env.IsDevelopment())
             {
@@ -59,6 +67,8 @@ namespace Challenge
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
