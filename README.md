@@ -6,7 +6,7 @@ Eu não criei suporte a banco de dados para facilitar na execução desse projet
 
 > Apesar de ser bem simples de adicionar um banco de dados a esse projeto, basta configurar o `Models/ChallengeContext.cs`.
 
-## Build - Como compilar
+## Run - Como rodar a API
 
 Para poder compilar o projeto você vai precisar do [sdk  `3.1`](https://dotnet.microsoft.com/download/dotnet-core/3.1) instalado em seu computador, e da ferramenta `dotnet` que já vem junto com o sdk.
 
@@ -14,29 +14,7 @@ Feito isso você tem que rodar os seguintes comandos em seu terminal:
 
 ```sh
 $ cd /pasta/do/projeto
-$ dotnet build
-```
-
-## Run - Como rodar a API
-
-Para rodar a API, você vai ter que entrar na pasta `bin/Debug/netcoreapp3.1` em seu terminal:
-
-```sh
-$ cd bin/Debug/netcoreapp3.1
-```
-
-E é só rodar o comando correspondente ao seu sistema operacional:
-
-> Linux / Mac / Unix
-
- ```sh
-$ ./Challenge
- ```
-
-> Windows
-
-```sh
-$ .\Challenge.exe
+$ dotnet run
 ```
 
 ## Documentação da API
