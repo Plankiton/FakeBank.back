@@ -8,6 +8,12 @@
         public double Balance { get; set; }
     }
 
+    public class ClientResponseNoAuth
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class ClientResponse
     {
         public long Id { get; set; }

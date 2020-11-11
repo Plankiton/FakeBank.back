@@ -45,7 +45,33 @@ namespace Challenge.Controllers
             return await _context.Clients.ToListAsync();
         }
 
-        // GET: api/client/pass/5
+        // GET: api/client/joao
+        [HttpGet("byname/{name}")]
+        public async Task<ActionResult<ClientResponseNoAuth>> GetChallengeClientNoAuthByName(string name)
+        {
+            var ChallengeClient = _context.Clients.First((c) => c.Name == name);
+
+            if (ChallengeClient == null)
+            {
+                return NotFound();
+            }
+
+            var strBalance = ChallengeClient.Balance.ToString();
+            _context.Operations.Add(new Operation{
+                    Client = ChallengeClient.Id.ToString(),
+                    Type = "GetClient",
+                    Value = strBalance,
+                    Date = DateTime.Now });
+
+            await _context.SaveChangesAsync();
+            return new ClientResponseNoAuth {
+                Id = ChallengeClient.Id,
+                Name = ChallengeClient.Name
+            };
+
+        }
+
+        // GET: api/client/pass/joao
         [HttpGet("byname/{pass}/{name}")]
         public async Task<ActionResult<ClientResponse>> GetChallengeClientByName(string pass, string name)
         {
