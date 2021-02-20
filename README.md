@@ -1,4 +1,6 @@
-# CidadeAlta Back-End
+# Fake Bank - Back-End
+
+![Fake Bank logo](https://raw.githubusercontent.com/plankiton/FakeBank/master/src/logo.svg)
 
 Uma API **ASP.NET Core** para se comunicar com o [Front-End]() feito em **React.JS**.
 
